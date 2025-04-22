@@ -1,8 +1,8 @@
 package com.example.therickandmortybook.ui.navigate
 
 sealed class NavigateScreen(val route: String) {
-    object CharacterList : NavigateScreen("character_list")
-    object CharacterDetail : NavigateScreen("character_detail/{characterId}") {
-        fun createRoute(characterId: Int): String = "character_detail/$characterId"
+    object Character : NavigateScreen("character")
+    object Detail : NavigateScreen("detail/{characterId}") {
+        fun createRoute(characterId: Int): String = "detail/$characterId"
     }
 }

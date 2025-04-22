@@ -1,8 +1,10 @@
-package com.example.therickandmortybook.di
+package com.example.therickandmortybook.data.serviceLocator
 
-import CharactersPagingSource
+import com.example.therickandmortybook.data.datasource.paging.CharactersPagingSource
 import com.example.therickandmortybook.BuildConfig
 import com.example.therickandmortybook.data.datasource.ApiService
+import com.example.therickandmortybook.data.repository.getCharacter.CharacterRepository
+import com.example.therickandmortybook.data.repository.pagerRepository.PagerRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -21,7 +23,8 @@ val networkModule = module {
     single { provideRetrofit(okHttpClient = get(), jsonConverter = get()) }
     single { provideApiService(retrofit = get()) }
     single { CharactersPagingSource(apiService = get()) }
-
+    single { PagerRepository(apiService = get()) }
+    single { CharacterRepository(apiService = get()) }
 }
 
 fun provideRetrofit(okHttpClient: OkHttpClient, jsonConverter: Converter.Factory): Retrofit {

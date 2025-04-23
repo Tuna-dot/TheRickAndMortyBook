@@ -1,10 +1,16 @@
 package com.example.therickandmortybook.data.serviceLocator
 
-import com.example.therickandmortybook.data.datasource.paging.CharactersPagingSource
+import com.example.therickandmortybook.data.datasource.characterPagingSource.CharactersPagingSource
 import com.example.therickandmortybook.BuildConfig
 import com.example.therickandmortybook.data.datasource.ApiService
-import com.example.therickandmortybook.data.repository.getCharacter.CharacterRepository
-import com.example.therickandmortybook.data.repository.pagerRepository.PagerRepository
+import com.example.therickandmortybook.data.datasource.episodesPagingSource.EpisodesPagingSource
+import com.example.therickandmortybook.data.datasource.locationPagingSource.LocationPagingSource
+import com.example.therickandmortybook.data.repository.character.characterById.CharacterRepository
+import com.example.therickandmortybook.data.repository.character.PagerRepository
+import com.example.therickandmortybook.data.repository.episode.EpisodesRepository
+import com.example.therickandmortybook.data.repository.episode.episodeById.EpisodeByIdRepository
+import com.example.therickandmortybook.data.repository.location.LocationRepository
+import com.example.therickandmortybook.data.repository.location.locationById.LocationByIdRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -16,15 +22,27 @@ import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
-
+    //Retrofit
     single { provideLoggingInterceptor() }
     single { provideOkHttpClient(loggingInterceptor = get()) }
     single { provideJson() }
     single { provideRetrofit(okHttpClient = get(), jsonConverter = get()) }
     single { provideApiService(retrofit = get()) }
+    //Characters
     single { CharactersPagingSource(apiService = get()) }
     single { PagerRepository(apiService = get()) }
+    //CharacterById
     single { CharacterRepository(apiService = get()) }
+    //Locations
+    single { LocationPagingSource(apiService = get()) }
+    single { LocationRepository(apiService = get()) }
+    //LocationById
+    single { LocationByIdRepository(apiService = get()) }
+    //Episodes
+    single { EpisodesPagingSource(apiService = get()) }
+    single { EpisodesRepository(apiService = get()) }
+    //EpisodeById
+    single { EpisodeByIdRepository(apiService = get()) }
 }
 
 fun provideRetrofit(okHttpClient: OkHttpClient, jsonConverter: Converter.Factory): Retrofit {

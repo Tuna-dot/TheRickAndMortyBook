@@ -1,5 +1,4 @@
-package com.example.therickandmortybook.data.model
-
+package com.example.therickandmortybook.data.model.charcter
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

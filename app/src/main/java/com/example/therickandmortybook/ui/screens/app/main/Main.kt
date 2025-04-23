@@ -12,25 +12,35 @@ import androidx.navigation.compose.rememberNavController
 import com.example.therickandmortybook.ui.bar.bottombar.BottomBar
 import com.example.therickandmortybook.ui.navigate.MainScreenNavHost
 import com.example.therickandmortybook.ui.bar.topbar.CenteredTopBar
+import com.example.therickandmortybook.ui.navigate.NavigateScreen
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun MainScreen(){
-    val title = remember { mutableStateOf("Rick and Morty")}
+fun MainScreen() {
+
+    val title = remember { mutableStateOf("Rick and Morty") }
     val navController = rememberNavController()
     val currentBackStack = navController.currentBackStackEntryAsState().value
     val currentRoute = currentBackStack?.destination?.route
-    Scaffold(topBar = {
-        CenteredTopBar(
-            title = title.value,
-            onBackClick = { navController.popBackStack() } ,
-            currentRoute = currentRoute
-        )
-    },
+    val showBottomBar = currentRoute in listOf(
+        NavigateScreen.Character.route,
+        NavigateScreen.Location.route,
+        NavigateScreen.Episode.route
+    )
+    Scaffold(
+        topBar = {
+            CenteredTopBar(
+                title = title.value,
+                onBackClick = { navController.popBackStack() },
+                currentRoute = currentRoute
+            )
+        },
         bottomBar = {
-            BottomBar(navController = navController, currentRoute = currentRoute)
+            if (showBottomBar) {
+                BottomBar(navController = navController, currentRoute = currentRoute)
+            }
         }
-        ) { padding ->
+    ) { padding ->
         MainScreenNavHost(navController, modifier = Modifier.padding(padding))
     }
 }

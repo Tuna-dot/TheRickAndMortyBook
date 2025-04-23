@@ -10,14 +10,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.therickandmortybook.ui.screens.app.main.character.CharacterScreen
-import com.example.therickandmortybook.ui.screens.app.main.character.detail.DetailScreen
+import com.example.therickandmortybook.ui.screens.app.main.character.characterDetail.DetailScreen
+import com.example.therickandmortybook.ui.screens.app.main.episode.EpisodesScreen
+import com.example.therickandmortybook.ui.screens.app.main.episode.episodeDetail.EpisodeDetailScreen
+import com.example.therickandmortybook.ui.screens.app.main.location.LocationScreen
+import com.example.therickandmortybook.ui.screens.app.main.location.locationDetail.LocationDetailScreen
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun MainScreenNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    ) {
+) {
     NavHost(
         navController = navController,
         startDestination = NavigateScreen.Character.route,
@@ -27,7 +31,7 @@ fun MainScreenNavHost(
             CharacterScreen(
                 onItemClick = { id ->
                     navController.navigate(NavigateScreen.Detail.createRoute(id))
-                    Log.e("ololo", "MainScreenNavHost: navigate", )
+                    Log.e("ololo", "MainScreenNavHost: navigate")
                 }
             )
         }
@@ -36,8 +40,36 @@ fun MainScreenNavHost(
             arguments = listOf(navArgument("characterId") { type = NavType.IntType })
         ) { backStackEntry ->
             val characterId = backStackEntry.arguments?.getInt("characterId") ?: return@composable
-                DetailScreen(characterId = characterId,)
+            DetailScreen(characterId = characterId)
 
+        }
+        composable(NavigateScreen.Location.route) {
+            LocationScreen(
+                onItemClick = { id ->
+                    navController.navigate(NavigateScreen.DetailLocation.createRoute(id!!))
+                }
+            )
+        }
+        composable(
+            route = NavigateScreen.DetailLocation.route,
+            arguments = listOf(navArgument("locationId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val locationId = backStackEntry.arguments?.getInt("locationId") ?: return@composable
+            LocationDetailScreen(locationId = locationId)
+        }
+        composable(NavigateScreen.Episode.route) {
+            EpisodesScreen(
+                onItemClick = { id ->
+                    navController.navigate(NavigateScreen.DetailEpisode.createRoute(id!!))
+                }
+            )
+        }
+        composable(
+            route = NavigateScreen.DetailEpisode.route,
+            arguments = listOf(navArgument("episodeId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val episodeId = backStackEntry.arguments?.getInt("episodeId") ?: return@composable
+            EpisodeDetailScreen(episodeId = episodeId)
         }
     }
 }

@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.example.therickandmortybook.data.model.ResultDto
+import com.example.therickandmortybook.data.model.charcter.ResultDto
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -128,7 +128,7 @@ fun CharacterItem(
 
 @Composable
 fun LoadingItem() {
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(modifier = Modifier.size(50.dp))
     }
 }

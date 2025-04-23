@@ -1,5 +1,6 @@
-package com.example.therickandmortybook.ui.screens.app.main.character.detail
+package com.example.therickandmortybook.ui.screens.app.main.character.characterDetail
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -7,11 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -19,16 +22,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.therickandmortybook.data.model.ResultDto
+import com.example.therickandmortybook.data.model.charcter.ResultDto
 import com.example.therickandmortybook.utils.UiState
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun DetailScreen(
     characterId: Int,
-    viewModel: DetailViewModel = getViewModel(),
+    viewModel: CharacterDetailViewModel = getViewModel(),
 ) {
-    val characterState = viewModel.characterState.collectAsState().value
+    val characterState = viewModel.state.collectAsState()
 
     LaunchedEffect(characterId) {
         viewModel.getCharacterById(characterId)
@@ -36,11 +39,14 @@ fun DetailScreen(
 
     when (characterState) {
         is UiState.Loading -> {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            )
+            Box(modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center){
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(16.dp),
+                )
+            }
         }
 
         is UiState.Success<ResultDto> -> {

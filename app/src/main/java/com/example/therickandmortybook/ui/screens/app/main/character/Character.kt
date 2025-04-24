@@ -17,22 +17,27 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
+import com.example.therickandmortybook.data.map.toResultDto
 import com.example.therickandmortybook.data.model.charcter.ResultDto
 import org.koin.androidx.compose.getViewModel
 
@@ -41,18 +46,26 @@ fun CharacterScreen(
     viewModel: CharacterViewModel = getViewModel(),
     onItemClick: (Int) -> Unit
 ) {
-    val pagingItems = viewModel.charactersPaging.collectAsLazyPagingItems()
+    val pagingItems = viewModel.characters.collectAsLazyPagingItems()
 
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()
-        .padding(8.dp)) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
         items(pagingItems.itemCount) { index ->
             val character = pagingItems[index]
             character?.let {
-                CharacterItem(character = it, onItemClick = { id ->
-                    id?.let { onItemClick(it) }  // Мы передаем id только если он не null
-                    Log.e("CharacterScreen", "Item clicked with ID: $id")
-                })
+                CharacterItem(
+                    character = it.toResultDto(),
+                    onItemClick = { id ->
+                        id?.let { onItemClick(it) }  // Передаем id только если он не null
+                    },
+                    onFavoriteClick = { characterId ->
+                        // Вызываем метод ViewModel для добавления/удаления из избранного
+                        viewModel.onFavoriteClick(characterId)
+                    }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
@@ -62,6 +75,7 @@ fun CharacterScreen(
                 is LoadState.Loading -> {
                     item { LoadingItem() }
                 }
+
                 is LoadState.Error -> {
                     item {
                         ErrorItem(
@@ -70,6 +84,7 @@ fun CharacterScreen(
                         )
                     }
                 }
+
                 else -> Unit
             }
 
@@ -80,10 +95,12 @@ fun CharacterScreen(
     }
 }
 
+
 @Composable
 fun CharacterItem(
     character: ResultDto?,
-    onItemClick: (Int?) -> Unit
+    onItemClick: (Int?) -> Unit,
+    onFavoriteClick: (Int) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -118,9 +135,29 @@ fun CharacterItem(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = character?.name ?: "",
+                    text = character?.status ?: "",
                     fontSize = 16.sp
                 )
+            }
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                IconButton(
+                    onClick = {
+                        // Toggle favorite status
+                        onFavoriteClick(character?.id ?: 0)
+                    }
+                ) {
+                    Icon(
+                        imageVector =
+                            if (character?.isFavorite == true) Icons.Default.Favorite
+                            else Icons.Default.FavoriteBorder,
+                        contentDescription = "Избранное",
+                        tint = Color.Red
+                    )
+                }
             }
         }
     }

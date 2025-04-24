@@ -28,5 +28,6 @@ data class ResultDto(
     @SerialName("url")
     val url: String? = null,
     @SerialName("created")
-    val created: String? = null
+    val created: String? = null,
+    val isFavorite: Boolean = false
 )

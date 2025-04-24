@@ -1,6 +1,8 @@
 package com.example.therickandmortybook
 
 import android.app.Application
+import com.example.therickandmortybook.data.serviceLocator.dispatcherModule
+import com.example.therickandmortybook.data.serviceLocator.localeModule
 import com.example.therickandmortybook.data.serviceLocator.networkModule
 import com.example.therickandmortybook.ui.serviceLocator.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -11,7 +13,7 @@ class App: Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(networkModule, viewModelModule)
+            modules(networkModule, localeModule,viewModelModule, dispatcherModule)
         }
     }
 }

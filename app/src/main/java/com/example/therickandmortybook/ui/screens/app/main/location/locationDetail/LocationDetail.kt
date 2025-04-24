@@ -25,7 +25,7 @@ import com.example.therickandmortybook.utils.UiState
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun LocationDetailScreen (
+fun LocationDetailScreen(
     viewModel: LocationDetailViewModel = getViewModel(),
     locationId: Int
 ) {
@@ -45,19 +45,27 @@ fun LocationDetailScreen (
                     )
                 }
             }
+
             is UiState.Success -> {
                 DetailProfile(location = result.data, characters = characters.value)
             }
+
             is UiState.Error -> {
                 Text(text = "Error: ${result.error.message}")
-            }else -> {
+            }
+
+            else -> {
                 Text(text = "Unknown state")
             }
         }
     }
 }
+
 @Composable
-fun DetailProfile(location: ResultDta, characters: List<ResultDto>) {
+fun DetailProfile(
+    location: ResultDta,
+    characters: List<ResultDto>
+) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Name: ${location.name}")
         Text(text = "Type: ${location.type}")

@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.1.10"
-
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -55,6 +55,11 @@ android {
 }
 
 dependencies {
+    //Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1") // Вместо kapt используйте ksp
+    // KTX для Room
+    implementation("androidx.room:room-ktx:2.6.1")
     // Paging 3
     implementation ("androidx.paging:paging-runtime:3.2.1")
     // Compose Paging
@@ -70,6 +75,8 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
+    //Gson
+    implementation("com.google.code.gson:gson:2.10.1")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

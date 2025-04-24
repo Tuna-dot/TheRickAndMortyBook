@@ -1,6 +1,5 @@
 package com.example.therickandmortybook.ui.screens.app.main.location.locationDetail
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.therickandmortybook.data.model.charcter.ResultDto
 import com.example.therickandmortybook.data.model.locatiion.ResultDta
@@ -15,12 +14,19 @@ import kotlinx.coroutines.launch
 class LocationDetailViewModel(
     private val locationByIdRepository: LocationByIdRepository,
     private val charactersRepository: CharacterRepository
-): BaseViewModel<ResultDta>() {
-    fun getLocationById(locationId: Int){
+) : BaseViewModel<ResultDta>() {
+
+    fun getLocationById(locationId: Int) {
         loadData {
-            locationByIdRepository.getLocationById(locationId)
+           val uiState = locationByIdRepository.getLocationById(locationId)
+            if (uiState is UiState.Success) {
+                uiState.data // Результат будет доступен здесь
+            } else {
+                throw Exception("Error fetching data")
+            }
         }
     }
+
     private val _characters = MutableStateFlow<List<ResultDto>>(emptyList())
     val characters: StateFlow<List<ResultDto>> = _characters
 
@@ -35,5 +41,4 @@ class LocationDetailViewModel(
             _characters.value = result
         }
     }
-
 }

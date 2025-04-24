@@ -3,6 +3,7 @@ package com.example.therickandmortybook.ui.bar.bottombar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -19,9 +20,10 @@ fun BottomBar(
 ) {
     NavigationBar {
         val items = listOf(
-            Triple(NavigateScreen.Character,  "Список персонажей", Icons.AutoMirrored.Filled.List),
-            Triple(NavigateScreen.Location,  "Список локаций", Icons.Default.Place),
-            Triple(NavigateScreen.Episode, "Список эпизодов", Icons.Outlined.MailOutline)
+            Triple(NavigateScreen.Character,  "Персонажи", Icons.AutoMirrored.Filled.List),
+            Triple(NavigateScreen.Location,  "Локации", Icons.Default.Place),
+            Triple(NavigateScreen.Episode, "Эпизоды", Icons.Outlined.MailOutline),
+            Triple(NavigateScreen.Favorite, "Избранное", Icons.Default.Star),
         )
 
         items.forEach { (screen, label, icon) ->

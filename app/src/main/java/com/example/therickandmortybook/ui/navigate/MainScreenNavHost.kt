@@ -13,6 +13,7 @@ import com.example.therickandmortybook.ui.screens.app.main.character.CharacterSc
 import com.example.therickandmortybook.ui.screens.app.main.character.characterDetail.DetailScreen
 import com.example.therickandmortybook.ui.screens.app.main.episode.EpisodesScreen
 import com.example.therickandmortybook.ui.screens.app.main.episode.episodeDetail.EpisodeDetailScreen
+import com.example.therickandmortybook.ui.screens.app.main.favorites.FavoriteScreen
 import com.example.therickandmortybook.ui.screens.app.main.location.LocationScreen
 import com.example.therickandmortybook.ui.screens.app.main.location.locationDetail.LocationDetailScreen
 
@@ -70,6 +71,9 @@ fun MainScreenNavHost(
         ) { backStackEntry ->
             val episodeId = backStackEntry.arguments?.getInt("episodeId") ?: return@composable
             EpisodeDetailScreen(episodeId = episodeId)
+        }
+        composable(NavigateScreen.Favorite.route) {
+            FavoriteScreen()
         }
     }
 }

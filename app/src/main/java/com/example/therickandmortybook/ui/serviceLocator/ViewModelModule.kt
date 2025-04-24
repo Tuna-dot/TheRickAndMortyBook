@@ -4,6 +4,7 @@ import com.example.therickandmortybook.ui.screens.app.main.character.CharacterVi
 import com.example.therickandmortybook.ui.screens.app.main.character.characterDetail.CharacterDetailViewModel
 import com.example.therickandmortybook.ui.screens.app.main.episode.EpisodesViewModel
 import com.example.therickandmortybook.ui.screens.app.main.episode.episodeDetail.EpisodeDetailViewModel
+import com.example.therickandmortybook.ui.screens.app.main.favorites.FavoriteViewModel
 import com.example.therickandmortybook.ui.screens.app.main.location.LocationViewModel
 import com.example.therickandmortybook.ui.screens.app.main.location.locationDetail.LocationDetailViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -12,7 +13,8 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel {
         CharacterViewModel(
-            pagerRepository = get()
+            pagerRepository = get(),
+
         )
     }
     viewModel {
@@ -41,6 +43,9 @@ val viewModelModule = module {
             locationRepository = get()
         )
     }
-
-
+    viewModel {
+        FavoriteViewModel(
+            repository = get()
+        )
+    }
 }

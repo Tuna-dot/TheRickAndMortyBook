@@ -1,7 +1,9 @@
 package com.example.therickandmortybook.data.serviceLocator
 
+import androidx.room.Room
 import com.example.therickandmortybook.data.datasource.characterPagingSource.CharactersPagingSource
 import com.example.therickandmortybook.BuildConfig
+import com.example.therickandmortybook.data.dataBaseLocal.AppDataBase
 import com.example.therickandmortybook.data.datasource.ApiService
 import com.example.therickandmortybook.data.datasource.episodesPagingSource.EpisodesPagingSource
 import com.example.therickandmortybook.data.datasource.locationPagingSource.LocationPagingSource
@@ -16,6 +18,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -29,8 +32,11 @@ val networkModule = module {
     single { provideRetrofit(okHttpClient = get(), jsonConverter = get()) }
     single { provideApiService(retrofit = get()) }
     //Characters
-    single { CharactersPagingSource(apiService = get()) }
-    single { PagerRepository(apiService = get()) }
+    single { CharactersPagingSource(apiService = get(),
+        dao = get()) }
+    single { PagerRepository(apiService = get(),
+        dao = get(),
+        io = get(named("IO"))) }
     //CharacterById
     single { CharacterRepository(apiService = get()) }
     //Locations

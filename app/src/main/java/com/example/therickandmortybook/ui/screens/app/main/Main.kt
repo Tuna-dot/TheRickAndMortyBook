@@ -25,7 +25,8 @@ fun MainScreen() {
     val showBottomBar = currentRoute in listOf(
         NavigateScreen.Character.route,
         NavigateScreen.Location.route,
-        NavigateScreen.Episode.route
+        NavigateScreen.Episode.route,
+        NavigateScreen.Favorite.route
     )
     Scaffold(
         topBar = {

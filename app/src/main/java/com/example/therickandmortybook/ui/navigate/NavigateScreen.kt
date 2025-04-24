@@ -15,4 +15,5 @@ sealed class NavigateScreen(val route: String) {
     object DetailEpisode : NavigateScreen("detailEpisode/{episodeId}") {
         fun createRoute(episodeId: Int): String = "detailEpisode/$episodeId"
     }
+    object Favorite : NavigateScreen("favorite")
 }

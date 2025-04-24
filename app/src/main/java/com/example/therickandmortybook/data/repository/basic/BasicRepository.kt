@@ -20,11 +20,11 @@ abstract class BasicRepository{
         }catch (e: HttpException) {
             UiState.Error(Exception("HTTP ошибка: ${e.code()} - ${e.message()}"))
         } catch (e: SocketTimeoutException) {
-            UiState.Error(Exception("Тайм-аут подключения"))
+            UiState.Error(Exception(e.message ?: "Тайм-аут подключения"))
         } catch (e: UnknownHostException) {
-            UiState.Error(Exception("Нет подключения к сети"))
+            UiState.Error(Exception(e.message ?:"Нет подключения к сети" ))
         } catch (e: IOException) {
-            UiState.Error(Exception("Ошибка ввода-вывода"))
+            UiState.Error(Exception(e.message ?: "Ошибка ввода-вывода"))
         } catch (e: Exception) {
             UiState.Error(e)
         }

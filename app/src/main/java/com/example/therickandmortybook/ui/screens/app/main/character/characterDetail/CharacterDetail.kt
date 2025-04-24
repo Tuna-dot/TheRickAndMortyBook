@@ -1,5 +1,6 @@
 package com.example.therickandmortybook.ui.screens.app.main.character.characterDetail
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.util.CoilUtils.result
 import com.example.therickandmortybook.data.model.charcter.ResultDto
 import com.example.therickandmortybook.utils.UiState
 import org.koin.androidx.compose.getViewModel
@@ -34,35 +36,32 @@ fun DetailScreen(
     val characterState = viewModel.state.collectAsState()
 
     LaunchedEffect(characterId) {
+        Log.e("ololo", "DetailScreen: Fetching character with ID: $characterId")
         viewModel.getCharacterById(characterId)
     }
 
-    when (characterState) {
+    when (val state = characterState.value) {
         is UiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center){
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(16.dp),
+                    modifier = Modifier.size(50.dp).padding(16.dp)
                 )
             }
         }
 
-        is UiState.Success<ResultDto> -> {
-            val character = characterState.data
-
-            HeroProfile(character)
-
-            Spacer(modifier = Modifier.height(16.dp))
+        is UiState.Success -> {
+            val character = state.data // Это правильное извлечение данных из UiState.Success
+            Log.d("ololo", "Character data loaded: $character")
+            HeroProfile(character = character)
         }
 
         is UiState.Error -> {
-            val errorMessage = characterState.error
-            Text(text = "Error: $errorMessage", color = Color.Red)
+            Log.e("ololo", "Error loading character: ${state.error.message}")
+            Text(text = "Error: ${state.error.message}", color = Color.Red)
         }
 
         else -> {
+            Log.d("ololo", "Unknown state: $state")
             Text(text = "Unknown state", color = Color.Red)
         }
     }

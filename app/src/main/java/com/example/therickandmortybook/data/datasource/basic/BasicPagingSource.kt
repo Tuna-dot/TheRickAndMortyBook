@@ -17,10 +17,10 @@ abstract class BasicPagingSource<T : Any>(
         return try {
             val response = loadData.invoke(page)
             if (
-               response.isSuccessful &&
+                response.isSuccessful &&
                 response.body() != null
             ) {
-                val result = response.body()!!.orEmpty()
+                val result = response.body()!!
 
                 val safePage = page.coerceAtLeast(1)
 
@@ -33,26 +33,30 @@ abstract class BasicPagingSource<T : Any>(
                     nextKey = nextKey
                 )
             } else {
-                when(response.code()){
+                when (response.code()) {
                     401 -> {
-                    LoadResult.Error(Exception("Ошибка авторизации"))
+                        LoadResult.Error(Exception("Ошибка авторизации"))
                     }
+
                     404 -> {
                         LoadResult.Error(Exception("Ошибка 404"))
                     }
+
                     500 -> {
                         LoadResult.Error(Exception("Ошибка 500"))
-                    }else -> {
+                    }
+
+                    else -> {
                         val message = response.errorBody()?.string() ?: "Неизвестная Ошибка"
                         LoadResult.Error(Exception(message))
                     }
                 }
             }
-        } catch (e: Exception) {
-            LoadResult.Error(e)
         } catch (e: HttpException) {
             LoadResult.Error(e)
         } catch (e: SocketTimeoutException) {
+            LoadResult.Error(e)
+        } catch (e: Exception) {
             LoadResult.Error(e)
         }
     }

@@ -1,25 +1,34 @@
 package com.example.therickandmortybook.ui.screens.app.main.favorites
 
-import android.provider.ContactsContract
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.therickandmortybook.data.dataBaseLocal.model.DataModel
-import com.example.therickandmortybook.data.repository.favorite.FavoriteRepository
+import com.example.therickandmortybook.data.repository.character.PagerRepository
+import com.example.therickandmortybook.utils.UiState
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class FavoriteViewModel(
-    private val repository: FavoriteRepository
+    private val repository: PagerRepository
 ) : ViewModel() {
 
-    val favorites: Flow<List<DataModel>> = repository.getFavoriteCharacters()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    // Просто предоставляем Flow с избранными персонажами
+    val favorites: Flow<List<DataModel>> = repository.getFavorites()
 
-    fun removeFromFavorites(character: DataModel) {
+    private val _removeStatus = MutableStateFlow<UiState<Unit>>(UiState.Success(Unit))
+    val removeStatus: StateFlow<UiState<Unit>> = _removeStatus
+
+    fun removeFromFavorites(id: Int) {
         viewModelScope.launch {
-            repository.removeFavorite(character)
+            try {
+                repository.removeFromFavorites(id)
+                _removeStatus.value = UiState.Success(Unit)  // Успешное удаление
+            } catch (e: Exception) {
+                _removeStatus.value = UiState.Error(e) // Ошибка при удалении
+            }
         }
     }
 }
+

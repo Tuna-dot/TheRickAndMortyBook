@@ -12,18 +12,18 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
 
+    @Update
+    suspend fun updateFavorite(character: DataModel)
+
     @Insert
     suspend fun insertFavorite(character: DataModel)
 
-    @Query("SELECT * FROM characters WHERE isFavorite = 1")
+    @Query("SELECT * FROM characters WHERE id = :id")
+    suspend fun getCharacterById(id: Int): DataModel?
+
+    @Query("SELECT * FROM characters")
     fun getFavorites(): Flow<List<DataModel>>
 
-    @Query("SELECT * FROM characters WHERE id = :id")
-    fun getCharacterById(id: Int): DataModel?
-
-    @Query("UPDATE characters SET isFavorite = :isFavorite WHERE id = :id")
-    suspend fun updateFavoriteStatus(id: Int, isFavorite: Boolean)
-
-    @Delete
-    suspend fun removeFavorite(character: DataModel)
+    @Query("SELECT id FROM characters")
+    suspend fun getFavoritesOnce(): List<Int>
 }

@@ -1,14 +1,13 @@
 package com.example.therickandmortybook.data.repository.character
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.example.therickandmortybook.data.dataBaseLocal.daos.NoteDao
 import com.example.therickandmortybook.data.dataBaseLocal.model.DataModel
 import com.example.therickandmortybook.data.datasource.ApiService
 import com.example.therickandmortybook.data.datasource.characterPagingSource.CharactersPagingSource
-import com.example.therickandmortybook.data.model.charcter.ResultDto
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -24,20 +23,45 @@ class PagerRepository(
             pagingSourceFactory = { CharactersPagingSource(apiService, dao) }
         ).flow
     }
-    suspend  fun getCharacterById(id : Int) : DataModel? {
+
+    suspend fun getCharacterById(id: Int): DataModel? {
         return withContext(io) {
             dao.getCharacterById(id)
         }
     }
 
-    // Получаем избранных персонажей
-    fun getFavorites(): Flow<List<DataModel>> {
+    suspend fun getFavorites(): Flow<List<DataModel>> {
         return dao.getFavorites()
+        dao.getFavorites().collect { favorites ->
+            Log.d("ololo", "$favorites.toString()")
+        }
     }
 
-    // Добавление/удаление персонажа в избранное
+    // Убираем из избранного
+    suspend fun removeFromFavorites(id: Int) {
+        withContext(io) {
+            val character = dao.getCharacterById(id)
+            if (character != null) {
+                val updatedCharacter = character.copy(isFavorite = false) // Убираем из избранного
+                dao.updateFavorite(updatedCharacter) // Обновляем запись в базе данных
+            }
+        }
+    }
+
+    // Переключаем избранное
     suspend fun toggleFavorite(character: DataModel) {
-        val updatedCharacter = character.copy(isFavorite = !character.isFavorite)
-        dao.insertFavorite(updatedCharacter)
+        withContext(io) {
+            val existingCharacter = dao.getCharacterById(character.id)
+            val updatedCharacter =
+                character.copy(isFavorite = !(existingCharacter?.isFavorite ?: false))
+
+            // Вставляем или обновляем в базе данных
+            if (existingCharacter != null) {
+                dao.updateFavorite(updatedCharacter) // Обновляем запись в базе данных
+            } else {
+
+                dao.insertFavorite(updatedCharacter) // Вставляем новый элемент
+            }
+        }
     }
 }

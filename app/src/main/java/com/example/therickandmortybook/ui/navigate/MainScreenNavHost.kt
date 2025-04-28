@@ -73,7 +73,7 @@ fun MainScreenNavHost(
             EpisodeDetailScreen(episodeId = episodeId)
         }
         composable(NavigateScreen.Favorite.route) {
-            FavoriteScreen()
+            FavoriteScreen(navController = navController)
         }
     }
 }

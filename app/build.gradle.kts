@@ -56,27 +56,27 @@ android {
 
 dependencies {
     //Room
-    implementation("androidx.room:room-runtime:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1") // Вместо kapt используйте ksp
+    implementation(libs.androidx.room.runtime)
+       ksp(libs.androidx.room.compiler) // Вместо kapt используйте ksp
     // KTX для Room
-    implementation("androidx.room:room-ktx:2.6.1")
+    implementation(libs.androidx.room.ktx)
     // Paging 3
-    implementation ("androidx.paging:paging-runtime:3.2.1")
+    implementation (libs.androidx.paging.runtime)
     // Compose Paging
-    implementation ("androidx.paging:paging-compose:3.2.1")
+    implementation (libs.androidx.paging.compose)
     //Coil
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.coil.compose)
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation(libs.androidx.navigation.compose)
     //Koin
-    implementation ("io.insert-koin:koin-androidx-compose:3.5.0")
+    implementation (libs.koin.androidx.compose)
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     //Gson
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.gson)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

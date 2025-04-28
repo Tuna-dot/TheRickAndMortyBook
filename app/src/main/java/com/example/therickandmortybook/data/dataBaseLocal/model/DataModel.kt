@@ -1,9 +1,12 @@
 package com.example.therickandmortybook.data.dataBaseLocal.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.therickandmortybook.data.model.charcter.LocationDto
+import androidx.room.TypeConverters
+import com.example.therickandmortybook.data.dataBaseLocal.convertor.Converters
 import com.example.therickandmortybook.data.model.charcter.OriginDto
+import com.example.therickandmortybook.data.model.charcter.LocationDto
 
 @Entity(tableName = "characters")
 data class DataModel(
@@ -13,11 +16,13 @@ data class DataModel(
     val species: String? = null,
     val type: String? = null,
     val gender: String? = null,
-    val origin: OriginDto? = null,
-    val location: LocationDto? = null,
+    @TypeConverters(Converters::class)
+    val origin: OriginDto?,
+    @TypeConverters(Converters::class)
+    val location: LocationDto?,
     val image: String? = null,
     val episode: List<String?>? = null,
     val url: String? = null,
     val created: String? = null,
-    val isFavorite: Boolean = false
+    @ColumnInfo(name = "isFavorite") val isFavorite: Boolean = false
 )

@@ -3,7 +3,6 @@ package com.example.therickandmortybook.data.serviceLocator
 import androidx.room.Room
 import com.example.therickandmortybook.data.datasource.characterPagingSource.CharactersPagingSource
 import com.example.therickandmortybook.BuildConfig
-import com.example.therickandmortybook.data.dataBaseLocal.AppDataBase
 import com.example.therickandmortybook.data.datasource.ApiService
 import com.example.therickandmortybook.data.datasource.episodesPagingSource.EpisodesPagingSource
 import com.example.therickandmortybook.data.datasource.locationPagingSource.LocationPagingSource
@@ -32,11 +31,19 @@ val networkModule = module {
     single { provideRetrofit(okHttpClient = get(), jsonConverter = get()) }
     single { provideApiService(retrofit = get()) }
     //Characters
-    single { CharactersPagingSource(apiService = get(),
-        dao = get()) }
-    single { PagerRepository(apiService = get(),
-        dao = get(),
-        io = get(named("IO"))) }
+    single {
+        CharactersPagingSource(
+            apiService = get(),
+            dao = get()
+        )
+    }
+    single {
+        PagerRepository(
+            apiService = get(),
+            dao = get(),
+            io = get(named("IO"))
+        )
+    }
     //CharacterById
     single { CharacterRepository(apiService = get()) }
     //Locations

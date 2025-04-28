@@ -9,10 +9,9 @@ import com.example.therickandmortybook.data.dataBaseLocal.model.DataModel
 
 @Database(
     entities = [DataModel::class],
-    version = 1,
-    exportSchema = false
+    version = 1
 )
 @TypeConverters(Converters::class)
-abstract class AppDataBase:RoomDatabase() {
+abstract class AppDataBase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
 }

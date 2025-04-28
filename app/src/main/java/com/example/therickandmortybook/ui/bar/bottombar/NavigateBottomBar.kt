@@ -20,8 +20,8 @@ fun BottomBar(
 ) {
     NavigationBar {
         val items = listOf(
-            Triple(NavigateScreen.Character,  "Персонажи", Icons.AutoMirrored.Filled.List),
-            Triple(NavigateScreen.Location,  "Локации", Icons.Default.Place),
+            Triple(NavigateScreen.Character, "Персонажи", Icons.AutoMirrored.Filled.List),
+            Triple(NavigateScreen.Location, "Локации", Icons.Default.Place),
             Triple(NavigateScreen.Episode, "Эпизоды", Icons.Outlined.MailOutline),
             Triple(NavigateScreen.Favorite, "Избранное", Icons.Default.Star),
         )
@@ -32,12 +32,12 @@ fun BottomBar(
                 selected = currentRoute?.startsWith(screen.route.substringBefore("/")) == true,
                 onClick = {
 
-                   navController.navigate(screen.route) {
-                       popUpTo(navController.graph.startDestinationId) {
-                           inclusive = false
-                       }
-                       launchSingleTop = true
-                   }
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                    }
                 },
                 icon = {
                     Icon(

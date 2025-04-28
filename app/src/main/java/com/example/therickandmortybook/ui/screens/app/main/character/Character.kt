@@ -64,6 +64,7 @@ fun CharacterScreen(
                     onFavoriteClick = { characterId ->
                         // Вызываем метод ViewModel для добавления/удаления из избранного
                         viewModel.onFavoriteClick(characterId)
+
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -146,6 +147,7 @@ fun CharacterItem(
             ) {
                 IconButton(
                     onClick = {
+                        Log.e("ololo", "CharacterItem: ", )
                         // Toggle favorite status
                         onFavoriteClick(character?.id ?: 0)
                     }

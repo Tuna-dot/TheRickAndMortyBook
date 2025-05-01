@@ -4,37 +4,60 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import com.example.therickandmortybook.data.dataBaseLocal.model.DataModel
+import com.example.therickandmortybook.data.map.toDataModel
+import com.example.therickandmortybook.data.map.toResultDto
+import com.example.therickandmortybook.data.model.charcter.ResultDto
 import com.example.therickandmortybook.data.repository.character.PagerRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class CharacterViewModel(private val pagerRepository: PagerRepository) : ViewModel() {
+class CharacterViewModel(
+    private val pagerRepository: PagerRepository
+) : ViewModel() {
 
-    private val reloadTrigger = MutableStateFlow(Unit) // Триггер для перезапуска
+    private val _showFavorites = MutableStateFlow(false)
+    val showFavorites: StateFlow<Boolean> get() = _showFavorites
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val characters: Flow<PagingData<DataModel>> = reloadTrigger.flatMapLatest {
-        pagerRepository.getCharacters()
+    private val _characterListFlow = MutableStateFlow<PagingData<DataModel>>(PagingData.empty())
+    val characterListFlow: StateFlow<PagingData<DataModel>> get() = _characterListFlow
+
+    private fun getCharacterFlow(): Flow<PagingData<DataModel>> {
+        return pagerRepository.getCharacters()
+            .map { pagingData ->
+                pagingData.map { dto: ResultDto ->
+                    dto.toDataModel(isFavorite = dto.isFavorite)
+                }
+            }
             .cachedIn(viewModelScope)
     }
 
-    // Метод для работы с избранным (добавление/удаление)
-    fun onFavoriteClick(characterId: Int) {
+    fun toggleFavorites() {
+        _showFavorites.value = !_showFavorites.value
+    }
+
+    fun onFavoriteClick(character: DataModel) {
         viewModelScope.launch {
-            val character = pagerRepository.getCharacterById(characterId)
-            if (character != null) {
-                pagerRepository.toggleFavorite(character) // Переключаем статус избранного
-                reload() // Перезапускаем загрузку персонажей
+            if (character.isFavorite) {
+                pagerRepository.deleteFavorites(character.toResultDto())
+            } else {
+                pagerRepository.addFavorites(character.toResultDto().copy(isFavorite = true))
             }
+
+            refreshCharacterList()
         }
     }
 
-    // Перезапуск загрузки
-    private fun reload() {
-        reloadTrigger.value = Unit // Просто "пинаем" триггер, чтобы обновить список
+    private suspend fun refreshCharacterList() {
+        val refreshedPagingData = getCharacterFlow().first()
+        _characterListFlow.value = refreshedPagingData
+    }
+
+    init {
+        viewModelScope.launch {
+            _characterListFlow.value = getCharacterFlow().first()
+        }
     }
 }

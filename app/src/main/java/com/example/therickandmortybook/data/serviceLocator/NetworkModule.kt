@@ -34,7 +34,6 @@ val networkModule = module {
     single {
         CharactersPagingSource(
             apiService = get(),
-            dao = get()
         )
     }
     single {

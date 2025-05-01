@@ -1,31 +1,14 @@
 package com.example.therickandmortybook.ui.screens.app.main.character
 
-import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.Icon
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,8 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.example.therickandmortybook.data.map.toResultDto
-import com.example.therickandmortybook.data.model.charcter.ResultDto
+import com.example.therickandmortybook.data.dataBaseLocal.model.DataModel
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -46,7 +28,7 @@ fun CharacterScreen(
     viewModel: CharacterViewModel = getViewModel(),
     onItemClick: (Int) -> Unit
 ) {
-    val pagingItems = viewModel.characters.collectAsLazyPagingItems()
+    val pagingItems = viewModel.characterListFlow.collectAsLazyPagingItems()
 
     LazyColumn(
         modifier = Modifier
@@ -57,14 +39,10 @@ fun CharacterScreen(
             val character = pagingItems[index]
             character?.let {
                 CharacterItem(
-                    character = it.toResultDto(),
-                    onItemClick = { id ->
-                        id?.let { onItemClick(it) }  // Передаем id только если он не null
-                    },
-                    onFavoriteClick = { characterId ->
-                        // Вызываем метод ViewModel для добавления/удаления из избранного
-                        viewModel.onFavoriteClick(characterId)
-
+                    character = it,
+                    onItemClick = { id -> id?.let(onItemClick) },
+                    onFavoriteClick = { dataModel ->
+                        viewModel.onFavoriteClick(dataModel)
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -72,7 +50,7 @@ fun CharacterScreen(
         }
 
         pagingItems.apply {
-            when (val state = pagingItems.loadState.refresh) {
+            when (loadState.refresh) {
                 is LoadState.Loading -> {
                     item { LoadingItem() }
                 }
@@ -80,8 +58,9 @@ fun CharacterScreen(
                 is LoadState.Error -> {
                     item {
                         ErrorItem(
-                            message = state.error.localizedMessage ?: "Ошибка",
-                            onRetry = { pagingItems.retry() }
+                            message = (loadState.refresh as LoadState.Error).error.localizedMessage
+                                ?: "Ошибка",
+                            onRetry = { retry() }
                         )
                     }
                 }
@@ -89,7 +68,7 @@ fun CharacterScreen(
                 else -> Unit
             }
 
-            if (pagingItems.loadState.append is LoadState.Loading) {
+            if (loadState.append is LoadState.Loading) {
                 item { LoadingItem() }
             }
         }
@@ -99,31 +78,28 @@ fun CharacterScreen(
 
 @Composable
 fun CharacterItem(
-    character: ResultDto?,
+    character: DataModel,
     onItemClick: (Int?) -> Unit,
-    onFavoriteClick: (Int) -> Unit
+    onFavoriteClick: (DataModel) -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                // Мы проверяем, что id не null перед вызовом onItemClick
-                character?.id?.let { id ->
-                    onItemClick(id)
-                }
-            },
-        shape = RoundedCornerShape(8.dp),
+            .clickable { onItemClick(character.id) },
+        shape = RoundedCornerShape(8.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
-                model = character?.image,
+                model = character.image,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(8.dp)
                     .size(50.dp)
                     .clip(CircleShape)
             )
+
             Spacer(modifier = Modifier.width(8.dp))
+
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -131,31 +107,28 @@ fun CharacterItem(
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = character?.name ?: "",
+                    text = character.name ?: "",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = character?.status ?: "",
+                    text = character.status ?: "",
                     fontSize = 16.sp
                 )
             }
+
+            Spacer(modifier = Modifier.weight(1f))
 
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.CenterEnd
             ) {
                 IconButton(
-                    onClick = {
-                        Log.e("ololo", "CharacterItem: ", )
-                        // Toggle favorite status
-                        onFavoriteClick(character?.id ?: 0)
-                    }
+                    onClick = { onFavoriteClick(character) }
                 ) {
                     Icon(
-                        imageVector =
-                            if (character?.isFavorite == true) Icons.Default.Favorite
-                            else Icons.Default.FavoriteBorder,
+                        imageVector = if (character.isFavorite) Icons.Default.Favorite
+                        else Icons.Default.FavoriteBorder,
                         contentDescription = "Избранное",
                         tint = Color.Red
                     )
@@ -164,6 +137,7 @@ fun CharacterItem(
         }
     }
 }
+
 
 @Composable
 fun LoadingItem() {

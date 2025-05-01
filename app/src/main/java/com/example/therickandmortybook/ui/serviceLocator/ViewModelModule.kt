@@ -45,7 +45,7 @@ val viewModelModule = module {
     }
     viewModel {
         FavoriteViewModel(
-            repository = get()
+            pagerRepository = get()
         )
     }
 }

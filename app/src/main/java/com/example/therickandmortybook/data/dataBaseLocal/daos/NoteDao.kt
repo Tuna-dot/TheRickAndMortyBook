@@ -12,18 +12,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
 
-    @Update
-    suspend fun updateFavorite(character: DataModel)
-
-    @Insert
-    suspend fun insertFavorite(character: DataModel)
-
-    @Query("SELECT * FROM characters WHERE id = :id")
-    suspend fun getCharacterById(id: Int): DataModel?
-
     @Query("SELECT * FROM characters")
-    fun getFavorites(): Flow<List<DataModel>>
+    fun fetchAllFavoriteCharacters(): Flow<List<DataModel>>
 
-    @Query("SELECT id FROM characters")
-    suspend fun getFavoritesOnce(): List<Int>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFavoriteCharacter(character: DataModel)
+
+    @Delete
+    suspend fun deleteFavoriteCharacter(character: DataModel)
 }

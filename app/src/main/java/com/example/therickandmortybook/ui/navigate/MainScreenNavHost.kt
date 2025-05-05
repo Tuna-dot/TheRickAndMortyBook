@@ -31,13 +31,13 @@ fun MainScreenNavHost(
         composable(NavigateScreen.Character.route) {
             CharacterScreen(
                 onItemClick = { id ->
-                    navController.navigate(NavigateScreen.Detail.createRoute(id))
+                    navController.navigate(NavigateScreen.CharacterDetail.createRoute(id))
                     Log.e("ololo", "MainScreenNavHost: navigate")
                 }
             )
         }
         composable(
-            route = NavigateScreen.Detail.route,
+            route = NavigateScreen.CharacterDetail.route,
             arguments = listOf(navArgument("characterId") { type = NavType.IntType })
         ) { backStackEntry ->
             val characterId = backStackEntry.arguments?.getInt("characterId") ?: return@composable
@@ -47,12 +47,12 @@ fun MainScreenNavHost(
         composable(NavigateScreen.Location.route) {
             LocationScreen(
                 onItemClick = { id ->
-                    navController.navigate(NavigateScreen.DetailLocation.createRoute(id!!))
+                    navController.navigate(NavigateScreen.LocationDetail.createRoute(id!!))
                 }
             )
         }
         composable(
-            route = NavigateScreen.DetailLocation.route,
+            route = NavigateScreen.LocationDetail.route,
             arguments = listOf(navArgument("locationId") { type = NavType.IntType })
         ) { backStackEntry ->
             val locationId = backStackEntry.arguments?.getInt("locationId") ?: return@composable
@@ -61,12 +61,12 @@ fun MainScreenNavHost(
         composable(NavigateScreen.Episode.route) {
             EpisodesScreen(
                 onItemClick = { id ->
-                    navController.navigate(NavigateScreen.DetailEpisode.createRoute(id!!))
+                    navController.navigate(NavigateScreen.EpisodeDetail.createRoute(id!!))
                 }
             )
         }
         composable(
-            route = NavigateScreen.DetailEpisode.route,
+            route = NavigateScreen.EpisodeDetail.route,
             arguments = listOf(navArgument("episodeId") { type = NavType.IntType })
         ) { backStackEntry ->
             val episodeId = backStackEntry.arguments?.getInt("episodeId") ?: return@composable

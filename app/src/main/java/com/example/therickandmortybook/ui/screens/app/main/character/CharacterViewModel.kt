@@ -45,14 +45,16 @@ class CharacterViewModel(
             } else {
                 pagerRepository.addFavorites(character.toResultDto().copy(isFavorite = true))
             }
+            _characterListFlow.value = _characterListFlow.value.map { dataModel ->
 
-            refreshCharacterList()
+                if (dataModel.id == character.id) {
+                    dataModel.copy(isFavorite = !dataModel.isFavorite)
+                } else {
+                    dataModel
+                }
+            }
+
         }
-    }
-
-    private suspend fun refreshCharacterList() {
-        val refreshedPagingData = getCharacterFlow().first()
-        _characterListFlow.value = refreshedPagingData
     }
 
     init {

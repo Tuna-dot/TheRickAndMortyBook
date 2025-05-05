@@ -28,10 +28,4 @@ class FavoriteViewModel(
             pagerRepository.deleteFavorites(id.toResultDto())
         }
     }
-
-    fun addToFavorites(model: DataModel) {
-        viewModelScope.launch {
-            pagerRepository.addFavorites(model.toResultDto())
-        }
-    }
 }

@@ -24,16 +24,16 @@ import org.koin.androidx.compose.getViewModel
 fun EpisodeDetailScreen(
     viewModel: EpisodeDetailViewModel = getViewModel(),
     episodeId: Int
-){
+) {
     val episode = viewModel.state.collectAsState()
     LaunchedEffect(episodeId) {
         viewModel.getEpisodeById(episodeId)
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        when(val result = episode.value){
+        when (val result = episode.value) {
             is UiState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize()){
+                Box(modifier = Modifier.fillMaxSize()) {
                     CircularProgressIndicator(
                         modifier = Modifier
                             .size(50.dp)
@@ -41,12 +41,16 @@ fun EpisodeDetailScreen(
                     )
                 }
             }
+
             is UiState.Success -> {
                 DetailProfile(episode = result.data)
             }
+
             is UiState.Error -> {
                 Text(text = "Error: ${result.error.message}")
-            }else -> {
+            }
+
+            else -> {
                 Text(text = "Unknown state")
             }
         }
@@ -57,27 +61,34 @@ fun EpisodeDetailScreen(
 fun DetailProfile(episode: ResultDte) {
     Column {
 
-        Text(text = "Name: ${episode.name}",
+        Text(
+            text = "Name: ${episode.name}",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            )
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = "Episode: ${episode.episode}",
+        Text(
+            text = "Episode: ${episode.episode}",
             fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,)
+            fontWeight = FontWeight.Bold,
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = "Air Date: ${episode.airDate}",
+        Text(
+            text = "Air Date: ${episode.airDate}",
             fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,)
+            fontWeight = FontWeight.Bold,
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = "Created: ${episode.created}",
+        Text(
+            text = "Created: ${episode.created}",
             fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,)
+            fontWeight = FontWeight.Bold,
+        )
     }
 }

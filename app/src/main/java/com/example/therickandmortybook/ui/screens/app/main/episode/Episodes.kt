@@ -24,7 +24,7 @@ import org.koin.androidx.compose.getViewModel
 fun EpisodesScreen(
     viewModel: EpisodesViewModel = getViewModel(),
     onItemClick: (Int?) -> Unit
-){
+) {
     val pagingItems = viewModel.episodeFlow.collectAsLazyPagingItems()
     LazyColumn(
         modifier = Modifier

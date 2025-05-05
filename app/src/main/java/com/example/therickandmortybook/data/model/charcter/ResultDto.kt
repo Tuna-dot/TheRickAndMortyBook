@@ -1,5 +1,6 @@
 package com.example.therickandmortybook.data.model.charcter
 
+import com.example.therickandmortybook.data.dataBaseLocal.model.DataModel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -30,4 +31,19 @@ data class ResultDto(
     @SerialName("created")
     val created: String? = null,
     val isFavorite: Boolean = false
-)
+) {
+    companion object {
+
+        fun ResultDto.toDataModel(
+            isFavorite: Boolean = false
+        ): DataModel {
+            return DataModel(
+                id = this.id ?: 0,
+                name = this.name,
+                status = this.status,
+                image = this.image,
+                isFavorite = isFavorite
+            )
+        }
+    }
+}

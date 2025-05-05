@@ -17,7 +17,7 @@ fun provideDataBase(context: Application): AppDataBase {
         context,
         AppDataBase::class.java,
         "The_Rick_And_Morty_database"
-    ).fallbackToDestructiveMigration()
+    ).fallbackToDestructiveMigration(true)
         .build()
 }
 

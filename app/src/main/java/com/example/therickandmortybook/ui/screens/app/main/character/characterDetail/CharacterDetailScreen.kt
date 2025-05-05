@@ -42,7 +42,9 @@ fun DetailScreen(
         is UiState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(50.dp).padding(16.dp)
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(16.dp)
                 )
             }
         }
@@ -67,9 +69,11 @@ fun DetailScreen(
 
 @Composable
 fun HeroProfile(character: ResultDto) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(vertical = 10.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 10.dp)
+    ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
                 model = character.image,

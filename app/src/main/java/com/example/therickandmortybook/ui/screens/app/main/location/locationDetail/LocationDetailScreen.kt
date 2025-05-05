@@ -64,9 +64,11 @@ fun LocationDetailScreen(
 @Composable
 fun DetailProfile(
     location: ResultDta,
-    characters: List<ResultDto>
+    characters: List<ResultDto>,
+    viewModel: LocationDetailViewModel = getViewModel()
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
+        viewModel.getResidents(location.residents)
         Text(text = "Name: ${location.name}")
         Text(text = "Type: ${location.type}")
         Text(text = "Dimension: ${location.dimension}")

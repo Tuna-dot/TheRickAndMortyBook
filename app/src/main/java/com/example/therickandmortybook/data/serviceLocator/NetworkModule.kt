@@ -1,13 +1,12 @@
 package com.example.therickandmortybook.data.serviceLocator
 
-import androidx.room.Room
-import com.example.therickandmortybook.data.datasource.characterPagingSource.CharactersPagingSource
 import com.example.therickandmortybook.BuildConfig
 import com.example.therickandmortybook.data.datasource.ApiService
+import com.example.therickandmortybook.data.datasource.characterPagingSource.CharactersPagingSource
 import com.example.therickandmortybook.data.datasource.episodesPagingSource.EpisodesPagingSource
 import com.example.therickandmortybook.data.datasource.locationPagingSource.LocationPagingSource
-import com.example.therickandmortybook.data.repository.character.characterById.CharacterRepository
 import com.example.therickandmortybook.data.repository.character.PagerRepository
+import com.example.therickandmortybook.data.repository.character.characterById.CharacterRepository
 import com.example.therickandmortybook.data.repository.episode.EpisodesRepository
 import com.example.therickandmortybook.data.repository.episode.episodeById.EpisodeByIdRepository
 import com.example.therickandmortybook.data.repository.location.LocationRepository

@@ -7,14 +7,15 @@ import retrofit2.Response
 
 class LocationPagingSource(
     private val apiService: ApiService
-): BasicPagingSource<ResultDta>(
+) : BasicPagingSource<ResultDta>(
     loadData = { page ->
         val response = apiService.getLocation(page)
         if (response.isSuccessful &&
-            response.body() != null){
+            response.body() != null
+        ) {
             val body = response.body()!!
             Response.success(body.results ?: emptyList())
-        }else{
+        } else {
             Response.error(response.code(), response.errorBody()!!)
         }
     }

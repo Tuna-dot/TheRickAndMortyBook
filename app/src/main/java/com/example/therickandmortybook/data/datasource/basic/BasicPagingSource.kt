@@ -5,7 +5,6 @@ import androidx.paging.PagingState
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.SocketTimeoutException
-import kotlin.collections.isNotEmpty
 
 abstract class BasicPagingSource<T : Any>(
     private val loadData: suspend (pageIndex: Int) -> Response<List<T>>

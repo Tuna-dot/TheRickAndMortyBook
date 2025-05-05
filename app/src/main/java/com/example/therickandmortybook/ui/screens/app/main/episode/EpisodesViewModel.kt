@@ -7,7 +7,7 @@ import com.example.therickandmortybook.data.repository.episode.EpisodesRepositor
 
 class EpisodesViewModel(
     private val episodesRepository: EpisodesRepository
-):ViewModel() {
+) : ViewModel() {
     val episodeFlow = episodesRepository.getEpisode()
         .cachedIn(viewModelScope)
 }

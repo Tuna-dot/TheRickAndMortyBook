@@ -2,7 +2,6 @@ package com.example.therickandmortybook.data.dataBaseLocal
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import com.example.therickandmortybook.data.dataBaseLocal.daos.NoteDao
 import com.example.therickandmortybook.data.dataBaseLocal.model.DataModel
 

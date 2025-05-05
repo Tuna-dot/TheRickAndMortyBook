@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.therickandmortybook.ui.bar.bottombar.BottomBar
-import com.example.therickandmortybook.ui.navigate.MainScreenNavHost
 import com.example.therickandmortybook.ui.bar.topbar.CenteredTopBar
+import com.example.therickandmortybook.ui.navigate.MainScreenNavHost
 import com.example.therickandmortybook.ui.navigate.NavigateScreen
 
 @SuppressLint("UnrememberedMutableState")

@@ -18,7 +18,7 @@ class LocationDetailViewModel(
 
     fun getLocationById(locationId: Int) {
         loadData {
-           val uiState = locationByIdRepository.getLocationById(locationId)
+            val uiState = locationByIdRepository.getLocationById(locationId)
             if (uiState is UiState.Success) {
                 uiState.data // Результат будет доступен здесь
             } else {

@@ -7,7 +7,7 @@ import com.example.therickandmortybook.utils.UiState
 
 class EpisodeByIdRepository(
     private val apiService: ApiService
-): BasicRepository() {
+) : BasicRepository() {
     suspend fun getEpisodeById(episodeId: Int): UiState<ResultDte> {
         return safeApiCall { apiService.getEpisodeById(episodeId) }
     }

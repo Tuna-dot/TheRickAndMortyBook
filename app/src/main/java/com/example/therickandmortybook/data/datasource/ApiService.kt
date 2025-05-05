@@ -16,7 +16,12 @@ interface ApiService {
 
     @GET("character")
     suspend fun getCharacters(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("name") name: String? = null,
+        @Query("status") status: String? = null,
+        @Query("species") species: String? = null,
+        @Query("type") type: String? = null,
+        @Query("gender") gender: String? = null
     ): Response<CharacterDto>
 
     @GET("character/{id}")
@@ -37,7 +42,7 @@ interface ApiService {
     @GET("episode")
     suspend fun getEpisodes(
         @Query("page") page: Int
-    ) : Response<EpisodesPagingDto>
+    ): Response<EpisodesPagingDto>
 
     @GET("episode/{id}")
     suspend fun getEpisodeById(

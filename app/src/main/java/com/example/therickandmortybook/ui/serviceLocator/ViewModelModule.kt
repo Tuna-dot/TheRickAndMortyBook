@@ -15,7 +15,7 @@ val viewModelModule = module {
         CharacterViewModel(
             pagerRepository = get(),
 
-        )
+            )
     }
     viewModel {
         CharacterDetailViewModel(
@@ -32,7 +32,7 @@ val viewModelModule = module {
             episodeByIdRepository = get()
         )
     }
-    viewModel{
+    viewModel {
         LocationDetailViewModel(
             locationByIdRepository = get(),
             charactersRepository = get()
